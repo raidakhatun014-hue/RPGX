@@ -1,0 +1,26 @@
+export class CombatEngine {
+  constructor(
+    private readonly formulas: Record<string, FormulaData>
+  ) {}
+
+  calculateDamage(
+    formulaKey: string,
+    stats: CombatStats
+  ): number {
+
+    const config = this.formulas[formulaKey];
+    const strategy = FORMULA_STRATEGIES[formulaKey];
+
+    if (!config) {
+      throw new Error(`Formula '${formulaKey}' not found.`);
+    }
+
+    if (!strategy) {
+      throw new Error(`Strategy '${formulaKey}' not implemented.`);
+    }
+
+    const damage = strategy(stats, config.variables);
+
+    return Math.max(0, Math.round(damage));
+  }
+}
